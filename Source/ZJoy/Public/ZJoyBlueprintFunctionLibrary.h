@@ -44,4 +44,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static FVector2D StaggeredCellMinAtIndex(FIntPoint Index, float CellSize);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	static TArray<FVector2D> SplitArc(FVector2D Arc, int N, float Size);
 };

@@ -120,3 +120,23 @@ FVector2D UZJoyBlueprintFunctionLibrary::StaggeredCellMinAtIndex(FIntPoint Index
 
 	return min;
 }
+
+TArray<FVector2D> UZJoyBlueprintFunctionLibrary::SplitArc(FVector2D Arc, int N, float Size)
+{
+	TArray<FVector2D> arcs;
+
+	float MaxSplitSize = (Arc.Y - Arc.X) / N;
+
+	float HalfMaxSplitSize = MaxSplitSize / 2.0f;
+
+	float HalfSplitSize = Size / 2.0f;
+
+	for (int i = 0; i < N; i++)
+	{
+		float center = Arc.X + i * MaxSplitSize + HalfMaxSplitSize;
+
+		arcs.Add(FVector2D(center - HalfSplitSize, center + HalfSplitSize));
+	}
+
+	return arcs;
+}
