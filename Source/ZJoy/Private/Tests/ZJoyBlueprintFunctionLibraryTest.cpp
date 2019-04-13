@@ -20,6 +20,13 @@ bool FZJoyBlueprintFunctionLibraryTest::RunTest(const FString& Parameters)
 	}
 
 	{
+		auto pointOnEllipse = UZJoyBlueprintFunctionLibrary::EllipseLineIntersection(FVector2D(2.0f, 0.0f), 1.0f, 1.0f);
+
+		TestEqual("FVector2D(2.0f, 0.0f) should intersect unit circle at X = 1.0", pointOnEllipse.X, 1.0f);
+		TestEqual("FVector2D(2.0f, 0.0f) should intersect unit circle at Y = 0.0", pointOnEllipse.Y, 0.0f);
+	}
+
+	{
 		auto pointOnEllipse = UZJoyBlueprintFunctionLibrary::EllipseLineIntersection(FVector2D(0.0f, 1.0f), 1.0f, 1.0f);
 
 		TestEqual("FVector2D(0.0f, 1.0f) should intersect unit circle at X = 0.0", pointOnEllipse.X, 0.0f);
@@ -51,12 +58,32 @@ bool FZJoyBlueprintFunctionLibraryTest::RunTest(const FString& Parameters)
 	}
 
 	{
+		auto pointOnEllipse = UZJoyBlueprintFunctionLibrary::EllipseLineIntersection(FVector2D(2.0f, 0.0f), 2.0f, 1.0f);
+
+		TestEqual("FVector2D(2.0f, 0.0f) should intersect ellipse with semiaxes of length 2.0 and 1.0 oriented along the cartesian X and Y axes at X = 2.0",
+			pointOnEllipse.X, 2.0f);
+
+		TestEqual("FVector2D(2.0f, 0.0f) should intersect ellipse with semiaxes of length 2.0 and 1.0 oriented along the cartesian X and Y axes at Y = 0.0",
+			pointOnEllipse.Y, 0.0f);
+	}
+
+	{
 		auto pointOnEllipse = UZJoyBlueprintFunctionLibrary::EllipseLineIntersection(FVector2D(0.0f, 1.0f), 2.0f, 1.0f);
 
 		TestEqual("FVector2D(0.0f, 1.0f) should intersect ellipse with semiaxes of length 2.0 and 1.0 oriented along the cartesian X and Y axes at X = 0.0",
 			pointOnEllipse.X, 0.0f);
 
 		TestEqual("FVector2D(0.0f, 1.0f) should intersect ellipse with semiaxes of length 2.0 and 1.0 oriented along the cartesian X and Y axes at Y = 1.0",
+			pointOnEllipse.Y, 1.0f);
+	}
+
+	{
+		auto pointOnEllipse = UZJoyBlueprintFunctionLibrary::EllipseLineIntersection(FVector2D(0.0f, 0.5f), 2.0f, 1.0f);
+
+		TestEqual("FVector2D(0.0f, 0.5f) should intersect ellipse with semiaxes of length 2.0 and 1.0 oriented along the cartesian X and Y axes at X = 0.0",
+			pointOnEllipse.X, 0.0f);
+
+		TestEqual("FVector2D(0.0f, 0.5) should intersect ellipse with semiaxes of length 2.0 and 1.0 oriented along the cartesian X and Y axes at Y = 1.0",
 			pointOnEllipse.Y, 1.0f);
 	}
 
@@ -111,7 +138,7 @@ bool FZJoyBlueprintFunctionLibraryTest::RunTest(const FString& Parameters)
 	}
 
 	{
-		auto pointOnEllipse = UZJoyBlueprintFunctionLibrary::EllipseLineIntersection(FVector2D(0.0f, -1.0f), 2.0f, 2.0f);
+		auto pointOnEllipse = UZJoyBlueprintFunctionLibrary::EllipseLineIntersection(FVector2D(0.0f, -1.0f), 1.0f, 2.0f);
 
 		TestEqual("FVector2D(0.0f, -1.0f) should intersect ellipse with semiaxes of length 1.0 and 2.0 oriented along the cartesian X and Y axes at X = 0.0",
 			pointOnEllipse.X, 0.0f);
@@ -138,7 +165,7 @@ bool FZJoyBlueprintFunctionLibraryTest::RunTest(const FString& Parameters)
 
 		TestEqual("Staggered cell at 1, 0 with unit size should have Min.X = sqrt 3", box.Min.X, SQRT_THREE);
 		TestEqual("Staggered cell at 1, 0 with unit size should have Min.Y = 0.0", box.Min.Y, 0.0f);
-		TestEqual("Staggered cell at 1, 0 with unit size should have Max.X = sqrt 3", box.Max.X, SQRT_THREE* 2.0f);
+		TestEqual("Staggered cell at 1, 0 with unit size should have Max.X = sqrt 3", box.Max.X, SQRT_THREE * 2.0f);
 		TestEqual("Staggered cell at 1, 0 with unit size should have Max.Y = 1.5", box.Max.Y, 1.5f);
 	}
 
@@ -232,7 +259,7 @@ bool FZJoyBlueprintFunctionLibraryTest::RunTest(const FString& Parameters)
 		TestEqual("Point at 2.0, 1.0 should correspond with staggered cell at X = 1", index.X, 1);
 		TestEqual("Point at 2.0, 1.0 should correspond with staggered cell at Y = 0", index.Y, 0);
 	}
-	
+
 	{
 		FVector2D point = { 1.0f, -1.0f };
 
