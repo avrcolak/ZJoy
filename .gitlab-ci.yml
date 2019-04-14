@@ -1,0 +1,11 @@
+variables:
+    GIT_STRATEGY: fetch
+    GIT_CHECKOUT: "true"
+
+build:
+  script:
+    - call BuildFiles.bat
+  artifacts:
+    name: "%CI_COMMIT_SHA%"
+    paths:
+      - ArchivedBuilds/
