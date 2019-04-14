@@ -4,7 +4,7 @@ variables:
 
 build:
   script:
-    - call "%CI_PROJECT_DIR%\BuildFiles.bat"
+    - call "%CI_PROJECT_DIR%\Build.bat"
   artifacts:
     name: "%CI_COMMIT_SHA%"
     paths:
