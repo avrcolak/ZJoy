@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// This is free and unencumbered software released into the public domain.
 
 #pragma once
 
