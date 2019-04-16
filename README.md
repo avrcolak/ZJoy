@@ -4,4 +4,5 @@ Game in the spirit of the great and creative [X68000](https://en.wikipedia.org/w
 
 For key bindings look [here](https://github.com/avrcolak/ZJoy/blob/master/Config/DefaultInput.ini).
 
-If you're running from one of the [build artifacts](https://gitlab.com/avrcolak/ZJoy/-/jobs), you may customize these bindings by copying the above file to WindowsNoEditor\ZJoy\Saved\Config\WindowsNoEditor\Input.ini and adjusting to taste.
+If you're running from one of the [build artifacts](https://gitlab.com/avrcolak/ZJoy/-/jobs), you may customize these bindings by copying the above file to WindowsNoEditor\ZJoy\Saved\Config\WindowsNoEditor\Input.ini, removing any line beginning with a ``-``, removing any ``+`` appearing at the beginning of a line, and, finally, adjusting what's left to taste.
+
