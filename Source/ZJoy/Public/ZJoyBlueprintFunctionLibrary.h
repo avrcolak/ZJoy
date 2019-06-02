@@ -19,7 +19,7 @@ public:
 	static FVector2D EllipseLineIntersection(FVector2D Point, float SemiAxisLengthX, float SemiAxisLengthY);
 
 	UFUNCTION(BlueprintCallable)
-	static void MaintainMinorAxisFov(APawn* Pawn);
+	static void MaintainMinorAxisFov(APlayerController* Controller);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	static FIntPoint StaggeredCellIndexAtPoint(FVector2D Point, float CellSize);

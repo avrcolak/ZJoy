@@ -3,6 +3,7 @@
 
 #include "ZJoyBlueprintFunctionLibrary.h"
 #include "Gameframework/Pawn.h"
+#include "GameFramework/PlayerController.h"
 #include "Engine/LocalPlayer.h"
 
 FVector2D UZJoyBlueprintFunctionLibrary::EllipseLineIntersection(FVector2D Point, float SemiAxisLengthX, float SemiAxisLengthY)
@@ -24,19 +25,24 @@ FVector2D UZJoyBlueprintFunctionLibrary::EllipseLineIntersection(FVector2D Point
 	return FVector2D(FMath::Sign(Point.X) * x, FMath::Sign(Point.Y) * y);
 }
 
-void UZJoyBlueprintFunctionLibrary::MaintainMinorAxisFov(APawn* Pawn)
+void UZJoyBlueprintFunctionLibrary::MaintainMinorAxisFov(APlayerController* Controller)
 {
-	auto player = Cast<ULocalPlayer>(Pawn->GetNetOwningPlayer());
+	auto player = Cast<ULocalPlayer>(Controller->GetNetOwningPlayer());
 
 	if (player)
 	{
-		FVector2D viewportSize;
+		auto viewportClient = player->ViewportClient;
 
-		player->ViewportClient->GetViewportSize(viewportSize);
+		if (viewportClient)
+		{
+			FVector2D viewportSize;
 
-		player->AspectRatioAxisConstraint = viewportSize.X > viewportSize.Y 
-			? EAspectRatioAxisConstraint::AspectRatio_MaintainYFOV
-			: EAspectRatioAxisConstraint::AspectRatio_MaintainXFOV;
+			viewportClient->GetViewportSize(viewportSize);
+
+			player->AspectRatioAxisConstraint = viewportSize.X > viewportSize.Y
+				? EAspectRatioAxisConstraint::AspectRatio_MaintainYFOV
+				: EAspectRatioAxisConstraint::AspectRatio_MaintainXFOV;
+		}
 	}
 }
 
