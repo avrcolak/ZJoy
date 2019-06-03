@@ -4,6 +4,7 @@
 #include "NetPlayPlayerController.h"
 #include "GameFramework/PlayerState.h"
 #include "Engine/World.h"
+#include "Engine/LocalPlayer.h"
 
 ANetPlayGameState::ANetPlayGameState()
 {
@@ -14,16 +15,39 @@ void ANetPlayGameState::BeginPlay()
 {
 	Super::BeginPlay();
 
-	auto Client = GetWorld()->GetFirstPlayerController<ANetPlayPlayerController>();
+	ANetPlayPlayerController* FirstLocalPlayerController = nullptr;
 
-	Client->ServerSync();
+	for (auto Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		FirstLocalPlayerController = Cast<ANetPlayPlayerController>(Iterator->Get());
+
+		if (FirstLocalPlayerController != nullptr)
+		{
+			break;
+		}
+	}
+
+	if (FirstLocalPlayerController != nullptr)
+	{
+		FirstLocalPlayerController->ServerSync();
+	}
+}
+
+void ANetPlayGameState::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	CurrentFrame++;
 }
 
 void ANetPlayGameState::Sync(int Frame)
 {
-
 	SetActorTickEnabled(true);
 	SyncFrame = Frame;
 
-	K2_OnSync();
+	ReceiveSync();
+}
+
+void ANetPlayGameState::PeerSync(int Frame)
+{
+	ReceivePeerSync();
 }

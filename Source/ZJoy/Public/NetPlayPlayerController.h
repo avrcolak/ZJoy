@@ -25,5 +25,8 @@ public:
 
 	UFUNCTION(Client, Reliable)
 	void ClientSync(int Frame);
+
+	UFUNCTION(Client, Reliable)
+	void ClientPeerSync(int Frame);
 };
 

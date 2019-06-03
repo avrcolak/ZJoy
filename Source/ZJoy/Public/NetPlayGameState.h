@@ -18,13 +18,21 @@ public:
 	ANetPlayGameState();
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "OnSync", ScriptName = "OnSync"))
-	void K2_OnSync();
+	void ReceiveSync();
+
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "OnPeerSync", ScriptName = "OnPeerSync"))
+	void ReceivePeerSync();
 
 	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaSeconds) override;
+
+	void PeerSync(int Frame);
 
 	void Sync(int Frame);
 
 	int SyncFrame;
 
+	UPROPERTY(BlueprintReadOnly)
 	int CurrentFrame;
 };
