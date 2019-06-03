@@ -18,7 +18,13 @@ bool ANetPlayPlayerController::ServerSync_Validate()
 
 void ANetPlayPlayerController::ServerSync_Implementation()
 {
-	auto CurrentFrame = GetWorld()->GetGameState<ANetPlayGameState>()->CurrentFrame;
+	auto GameState = GetWorld()->GetGameState<ANetPlayGameState>();
+
+	auto CurrentFrame = GameState->CurrentFrame;
+
+	auto CurrentSeed = GameState->RandomStream.GetCurrentSeed();
+
+	ClientSync(CurrentFrame, CurrentSeed);
 
 	for (auto Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
@@ -29,13 +35,11 @@ void ANetPlayPlayerController::ServerSync_Implementation()
 			Other->ClientPeerSync(CurrentFrame);
 		}
 	}
-
-	ClientSync(CurrentFrame);
 }
 
-void ANetPlayPlayerController::ClientSync_Implementation(int Frame)
+void ANetPlayPlayerController::ClientSync_Implementation(int Frame, int Seed)
 {
-	GetWorld()->GetGameState<ANetPlayGameState>()->Sync(Frame);
+	GetWorld()->GetGameState<ANetPlayGameState>()->Sync(Frame, Seed);
 }
 
 void ANetPlayPlayerController::ClientPeerSync_Implementation(int Frame)

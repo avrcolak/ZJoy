@@ -29,10 +29,11 @@ public:
 
 	void PeerSync(int Frame);
 
-	void Sync(int Frame);
-
-	int SyncFrame;
+	void Sync(int Frame, int Seed);
 
 	UPROPERTY(BlueprintReadOnly)
 	int CurrentFrame;
+
+	UPROPERTY(BlueprintReadWrite)
+	FRandomStream RandomStream;
 };

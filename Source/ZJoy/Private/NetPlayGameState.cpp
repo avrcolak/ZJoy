@@ -9,6 +9,8 @@
 ANetPlayGameState::ANetPlayGameState()
 {
 	PrimaryActorTick.bStartWithTickEnabled = false;
+
+	RandomStream.GenerateNewSeed();
 }
 
 void ANetPlayGameState::BeginPlay()
@@ -39,10 +41,13 @@ void ANetPlayGameState::Tick(float DeltaSeconds)
 	CurrentFrame++;
 }
 
-void ANetPlayGameState::Sync(int Frame)
+void ANetPlayGameState::Sync(int Frame, int Seed)
 {
 	SetActorTickEnabled(true);
-	SyncFrame = Frame;
+	
+	CurrentFrame = Frame;
+
+	RandomStream.Initialize(Seed);
 
 	ReceiveSync();
 }
