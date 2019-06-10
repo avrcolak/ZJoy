@@ -24,7 +24,9 @@ void ANetPlayPlayerController::ServerSync_Implementation()
 
 	auto CurrentSeed = GameState->RandomStream.GetCurrentSeed();
 
-	ClientSync(CurrentFrame, CurrentSeed);
+	auto CurrentState = GameState->State();
+
+	ClientSync(CurrentState, CurrentFrame, CurrentSeed);
 
 	for (auto Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
@@ -37,9 +39,9 @@ void ANetPlayPlayerController::ServerSync_Implementation()
 	}
 }
 
-void ANetPlayPlayerController::ClientSync_Implementation(int Frame, int Seed)
+void ANetPlayPlayerController::ClientSync_Implementation(const TArray<uint8>& State, int Frame, int Seed)
 {
-	GetWorld()->GetGameState<ANetPlayGameState>()->Sync(Frame, Seed);
+	GetWorld()->GetGameState<ANetPlayGameState>()->Sync(State, Frame, Seed);
 }
 
 void ANetPlayPlayerController::ClientPeerSync_Implementation(int Frame)
@@ -57,4 +59,19 @@ void ANetPlayPlayerController::PossessQuickAndDirty(APawn* InPawn)
 		AutoManageActiveCameraTarget(GetPawn());
 		ResetCameraMode();
 	}
+}
+
+bool ANetPlayPlayerController::ServerInput_Validate(int PlayerId, int Frame, const TArray<uint8>& Input)
+{
+	return true;
+}
+
+void ANetPlayPlayerController::ServerInput_Implementation(int PlayerId, int Frame, const TArray<uint8>& Input)
+{
+	return;
+}
+
+void ANetPlayPlayerController::ClientPeerInput_Implementation(int PlayerId, int Frame, const TArray<uint8>& Input)
+{
+	GetWorld()->GetGameState<ANetPlayGameState>()->PeerInput(PlayerId, Frame, Input);
 }

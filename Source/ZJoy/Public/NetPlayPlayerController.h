@@ -24,9 +24,15 @@ public:
 	void ServerSync();
 
 	UFUNCTION(Client, Reliable)
-	void ClientSync(int Frame, int Seed);
+	void ClientSync(const TArray<uint8>&State, int Frame, int Seed);
 
 	UFUNCTION(Client, Reliable)
 	void ClientPeerSync(int Frame);
+
+	UFUNCTION(Reliable, Server, WithValidation)
+	void ServerInput(int PlayerId, int Frame, const TArray<uint8>& Input);
+
+	UFUNCTION(Client, Reliable)
+	void ClientPeerInput(int PlayerId, int Frame, const TArray<uint8>& Input);
 };
 
