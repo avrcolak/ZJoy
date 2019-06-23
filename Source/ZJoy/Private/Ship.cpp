@@ -2,9 +2,17 @@
 
 
 #include "Ship.h"
+#include "ShipBehavior.h"
 #include "Snapshot.h"
+#include "ZJoyGameState.h"
+#include "Engine/World.h"
 
-union FSnapshot AShip::Snapshot()
+AShip::AShip()
+{
+	PlayerId = CreateDefaultSubobject<UNetPlayPlayerId>(TEXT("PlayerId"));
+}
+
+FSnapshot AShip::Snapshot()
 {
 	FSnapshot Snapshot;
 
@@ -32,3 +40,16 @@ void AShip::LoadSnapshot(FSnapshot Snapshot)
 	SetActorLocation(Location);
 }
 
+FShipMove AShip::GetShipMove()
+{
+	auto Behavior = Cast<AShipBehavior>(Controller);
+
+	if (Behavior)
+	{
+		return Behavior->GetShipMove();
+	}
+
+	auto GameState = GetWorld()->GetGameState<AZJoyGameState>();
+
+	return GameState->GetShipMove(PlayerId->Id);
+}

@@ -59,7 +59,7 @@ void ANetPlayGameState::Tick(float DeltaSeconds)
 
 		auto ReplayFrame = CurrentFrame;
 
-		for (int CurrentFrame = Unread; CurrentFrame <= ReplayFrame; CurrentFrame++)
+		for (CurrentFrame = Unread; CurrentFrame <= ReplayFrame; CurrentFrame++)
 		{
 			for (auto& Relevant : NetPlayRelevant)
 			{
@@ -83,7 +83,7 @@ void ANetPlayGameState::SyncState(const TArray<uint8>& State)
 	return;
 }
 
-void ANetPlayGameState::Sync(const TArray<uint8>& State, int Frame, int Seed)
+void ANetPlayGameState::Sync(const TArray<uint8>& State, int Seed, int PlayerId, int Frame)
 {
 	SetActorTickEnabled(true);
 
@@ -96,17 +96,17 @@ void ANetPlayGameState::Sync(const TArray<uint8>& State, int Frame, int Seed)
 	ReceiveSync();
 }
 
-void ANetPlayGameState::PeerSync(int Frame)
+void ANetPlayGameState::PeerSync(int Frame, int PlayerId)
 {
-	ReceivePeerSync();
+	ReceivePeerSync(PlayerId);
 }
 
-void ANetPlayGameState::PeerInput(int Player, int Frame, const TArray<uint8>& Input)
+void ANetPlayGameState::PeerInput(const TArray<uint8>& Input, int PlayerId, int Frame)
 {
 	// This needs to be handled more gracefully at some point.
 	check(Frame < MinimumRead() + NETPLAY_HISTORY);
 
-	ReadAndRecievedForPlayer[Player].Recieved = Frame;
+	ReadAndRecievedForPlayer[PlayerId].Recieved = Frame;
 }
 
 int ANetPlayGameState::MinimumRead()

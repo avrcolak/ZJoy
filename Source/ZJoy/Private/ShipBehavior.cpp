@@ -1,16 +1,21 @@
 // This is free and unencumbered software released into the public domain.
 
 
-#include "NetPlayAIController.h"
+#include "ShipBehavior.h"
 #include "Engine/World.h"
 
-ANetPlayAIController::ANetPlayAIController()
+AShipBehavior::AShipBehavior()
 {
 	bCanPossessWithoutAuthority = true;
 }
 
-void ANetPlayAIController::PossessQuickAndDirty(APawn* InPawn)
+void AShipBehavior::PossessQuickAndDirty_Implementation(APawn* InPawn)
 {
 	SetPawn(InPawn);
 	InPawn->Controller = this;
+}
+
+FShipMove AShipBehavior::GetShipMove()
+{
+	return Pending;
 }

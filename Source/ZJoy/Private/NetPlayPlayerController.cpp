@@ -3,8 +3,10 @@
 
 #include "NetPlayPlayerController.h"
 #include "NetPlayGameState.h"
+#include "NetPlayPlayerId.h"
 #include "Engine/ChildConnection.h"
 #include "Engine/World.h"
+#include "GameFramework/PlayerState.h"
 
 ANetPlayPlayerController::ANetPlayPlayerController()
 {
@@ -26,7 +28,9 @@ void ANetPlayPlayerController::ServerSync_Implementation()
 
 	auto CurrentState = GameState->State();
 
-	ClientSync(CurrentState, CurrentFrame, CurrentSeed);
+	Id = PlayerState->PlayerId;
+
+	ClientSync(CurrentState, CurrentSeed, Id, CurrentFrame);
 
 	for (auto Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
@@ -34,25 +38,36 @@ void ANetPlayPlayerController::ServerSync_Implementation()
 
 		if (Other != nullptr && Other != this && Cast<UChildConnection>(Other->Player) == nullptr)
 		{
-			Other->ClientPeerSync(CurrentFrame);
+			Other->ClientPeerSync(CurrentFrame, Id);
 		}
 	}
 }
 
-void ANetPlayPlayerController::ClientSync_Implementation(const TArray<uint8>& State, int Frame, int Seed)
+void ANetPlayPlayerController::ClientSync_Implementation(const TArray<uint8>& State, int Seed, int PlayerId, int Frame)
 {
-	GetWorld()->GetGameState<ANetPlayGameState>()->Sync(State, Frame, Seed);
+	Id = PlayerId;
+
+	GetWorld()->GetGameState<ANetPlayGameState>()->Sync(State, Seed, PlayerId, Frame);
+
+	bSynced = true;
 }
 
-void ANetPlayPlayerController::ClientPeerSync_Implementation(int Frame)
+void ANetPlayPlayerController::ClientPeerSync_Implementation(int Frame, int PlayerId)
 {
-	GetWorld()->GetGameState<ANetPlayGameState>()->PeerSync(Frame);
+	GetWorld()->GetGameState<ANetPlayGameState>()->PeerSync(Frame, PlayerId);
 }
 
-void ANetPlayPlayerController::PossessQuickAndDirty(APawn* InPawn)
+void ANetPlayPlayerController::PossessQuickAndDirty_Implementation(APawn* InPawn)
 {
 	SetPawn(InPawn);
 	InPawn->Controller = this;
+
+	UNetPlayPlayerId* PlayerId = Cast<UNetPlayPlayerId>(InPawn->GetComponentByClass(UNetPlayPlayerId::StaticClass()));
+
+	if (PlayerId)
+	{
+		PlayerId->Id = Id;
+	}
 
 	if (bAutoManageActiveCameraTarget)
 	{
@@ -73,5 +88,5 @@ void ANetPlayPlayerController::ServerInput_Implementation(int PlayerId, int Fram
 
 void ANetPlayPlayerController::ClientPeerInput_Implementation(int PlayerId, int Frame, const TArray<uint8>& Input)
 {
-	GetWorld()->GetGameState<ANetPlayGameState>()->PeerInput(PlayerId, Frame, Input);
+	GetWorld()->GetGameState<ANetPlayGameState>()->PeerInput(Input, PlayerId, Frame);
 }

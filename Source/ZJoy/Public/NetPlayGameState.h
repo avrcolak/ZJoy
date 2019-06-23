@@ -31,7 +31,7 @@ public:
 	void ReceiveSync();
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "OnPeerSync", ScriptName = "OnPeerSync"))
-	void ReceivePeerSync();
+	void ReceivePeerSync(int PlayerId);
 
 	UFUNCTION(BlueprintCallable)
 	void RegisterForRollback(AActor* Actor);
@@ -44,11 +44,11 @@ public:
 
 	virtual void SyncState(const TArray<uint8>&);
 
-	void PeerSync(int Frame);
+	virtual void PeerSync(int Frame, int PlayerId);
 
-	void Sync(const TArray<uint8>& State, int Frame, int Seed);
+	virtual void Sync(const TArray<uint8>& State, int Seed, int PlayerId, int Frame);
 
-	void PeerInput(int Player, int Frame, const TArray<uint8>& Input);
+	void PeerInput(const TArray<uint8>& Input, int PlayerId, int Frame);
 
 	int EarliestUnread();
 
